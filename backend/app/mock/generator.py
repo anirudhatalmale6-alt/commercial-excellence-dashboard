@@ -147,7 +147,10 @@ class MockWorld:
         self.opportunities: list[dict] = []
         oid = 0
         for acc in self.accounts:
-            for _ in range(rng.randint(1, 4)):
+            # Sampled without replacement so one account never ends up with two
+            # deals of the same name — they are indistinguishable in an action list.
+            families = rng.sample(PRODUCT_FAMILIES, rng.randint(1, 4))
+            for family in families:
                 oid += 1
                 created = self.today - timedelta(days=rng.randint(5, 260))
                 stage = rng.choices(
@@ -181,7 +184,7 @@ class MockWorld:
                         "AccountId": acc["Id"],
                         "AccountName": acc["Name"],
                         "OwnerId": acc["OwnerId"],
-                        "Name": f"{acc['Name']} - {rng.choice(PRODUCT_FAMILIES)}",
+                        "Name": f"{acc['Name']} - {family}",
                         "StageName": stage,
                         "Amount": amount,
                         "CurrencyIsoCode": "EUR",
