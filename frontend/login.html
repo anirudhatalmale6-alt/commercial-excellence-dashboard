@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign in - Commercial Excellence</title>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+  <main class="login-plane">
+    <div class="login-card">
+      <div class="brand">
+        <span class="brand-mark">CE</span>
+        <span>
+          <span class="brand-name">Commercial Excellence</span><br />
+          <span class="brand-sub">Sales performance MVP</span>
+        </span>
+      </div>
+
+      <h1>Sign in</h1>
+      <p class="lede">Identity comes from the CRM user directory. Pick a demo account to see the manager and rep views.</p>
+
+      <div id="error" hidden class="error"></div>
+
+      <form id="form">
+        <div class="field">
+          <label for="demo">Demo account</label>
+          <select id="demo"><option value="">Loading users…</option></select>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" value="demo1234" required />
+        </div>
+        <button class="btn primary" type="submit">Sign in</button>
+      </form>
+
+      <p class="login-note">
+        Test environment. All demo accounts use the password <b>demo1234</b>.
+        Managers see their whole team and can drill into any rep; reps see only their own book.
+      </p>
+    </div>
+  </main>
+
+  <script type="module">
+    import { api, setToken } from '/js/api.js';
+
+    const sel = document.getElementById('demo');
+    const email = document.getElementById('email');
+    const err = document.getElementById('error');
+
+    function fail(msg) { err.hidden = false; err.textContent = msg; }
+
+    try {
+      const { users } = await api('/api/auth/demo-users');
+      sel.innerHTML = '';
+      const groups = { manager: 'Managers', rep: 'Sales reps' };
+      for (const role of ['manager', 'rep']) {
+        const g = document.createElement('optgroup');
+        g.label = groups[role];
+        for (const u of users.filter(x => x.role === role)) {
+          const o = document.createElement('option');
+          o.value = u.email;
+          o.textContent = `${u.name} — ${u.team}`;
+          g.appendChild(o);
+        }
+        sel.appendChild(g);
+      }
+      email.value = sel.value;
+    } catch (e) {
+      sel.innerHTML = '<option value="">unavailable</option>';
+    }
+
+    sel.addEventListener('change', () => { email.value = sel.value; });
+
+    document.getElementById('form').addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      err.hidden = true;
+      try {
+        const res = await api('/api/auth/login', {
+          method: 'POST',
+          body: { email: email.value, password: document.getElementById('password').value },
+        });
+        setToken(res.token);
+        location.href = '/';
+      } catch (e) {
+        fail(e.message || 'Sign in failed');
+      }
+    });
+  </script>
+</body>
+</html>

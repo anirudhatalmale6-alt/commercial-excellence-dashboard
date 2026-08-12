@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Commercial Excellence - Sales Performance</title>
+  <link rel="stylesheet" href="/css/app.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">CE</span>
+      <span>
+        <span class="brand-name">Commercial Excellence</span>
+        <span class="brand-sub" id="scope-label">…</span>
+      </span>
+    </div>
+
+    <div class="topbar-spacer"></div>
+
+    <div class="scope-picker" id="scope-picker" hidden>
+      <label for="focus">Viewing</label>
+      <select id="focus"></select>
+    </div>
+
+    <div class="sync-state" id="sync-state" title="Live connection to the sync engine">
+      <span class="pulse"></span><span id="sync-text">connecting…</span>
+    </div>
+
+    <button class="btn ghost" id="refresh" title="Force a sync now">Refresh</button>
+    <button class="btn ghost" id="theme" title="Toggle light / dark">Theme</button>
+
+    <div class="user-chip">
+      <span class="avatar" id="avatar">–</span>
+      <span class="who"><b id="user-name">…</b><span id="user-role"></span></span>
+    </div>
+    <button class="btn ghost" id="logout">Sign out</button>
+  </header>
+
+  <main class="wrap">
+    <section>
+      <div class="section-head">
+        <h2>Integration status</h2>
+        <p id="integration-note">Every number below is traceable to one of these systems.</p>
+      </div>
+      <div class="integrations" id="integrations"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Performance</h2>
+        <p id="kpi-note"></p>
+      </div>
+      <div class="kpis" id="kpis"></div>
+    </section>
+
+    <section class="grid-main" style="margin-top:26px">
+      <div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Revenue against target</h3>
+            <span class="sub">Last 6 months · ERP actuals vs Datalake targets</span>
+          </div>
+          <div class="legend">
+            <span class="item"><span class="swatch" style="background:var(--series-1)"></span>Actual revenue</span>
+            <span class="item"><span class="swatch line" style="background:var(--series-2)"></span>Target</span>
+            <span class="item" style="color:var(--ink-muted)">* current month is partial</span>
+          </div>
+          <div id="chart-revenue"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Pipeline by stage</h3>
+            <span class="sub">CRM · open deal value, plus what closed in 90 days</span>
+          </div>
+          <div id="chart-funnel"></div>
+        </div>
+
+        <div class="panel" id="panel-table">
+          <div class="panel-head">
+            <h3 id="table-title">Team</h3>
+            <span class="sub" id="table-sub"></span>
+          </div>
+          <div id="table-body"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Customer meetings &amp; demos per week</h3>
+            <span class="sub">Datalake activity rollup · leading indicator</span>
+          </div>
+          <div id="chart-activity"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-head">
+            <h3>Priority actions</h3>
+            <span class="sub" id="actions-sub"></span>
+          </div>
+          <div class="actions" id="actions"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
